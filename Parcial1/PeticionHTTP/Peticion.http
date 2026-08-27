@@ -1,0 +1,10 @@
+##Archivo Http
+POST https://jsonplaceholder.typicode.com/posts
+Content-Type: application/json
+
+{
+    "title": "Mi proyecto API, usando HTTPYAC para ejecutar",
+    "body": "Hola, mi nombre es Valeria Segovia",
+    "Fecha": "27-08-2026",
+    "Semestre": 7
+}
