@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const morgan = require("morgan");
 const usuarioRoutes = require("./routes/usuario.routes");
+const archivoRoutes = require("./routes/archivo.routes");
 const {
     rutaNoEncontrada,
     horarioPermitido,
@@ -33,6 +34,7 @@ morgan.token("fecha-local", () => {
 
 app.use(express.json());
 app.use(cors());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use((req, res, next) => {
     req.fechaSolicitud = new Date().toISOString();
@@ -53,6 +55,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/usuario", horarioPermitido(7, 9), soloJson, usuarioRoutes);
+app.use("/api/archivo", archivoRoutes);
 
 app.use(rutaNoEncontrada);
 

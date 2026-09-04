@@ -8,3 +8,28 @@ Content-Type: application/json
     "Fecha": "27-08-2026",
     "Semestre": 7
 }
+
+###
+# Cargar un archivo con Multer
+POST http://localhost:3000/api/archivo
+Content-Type: multipart/form-data; boundary=HttpyacBoundary
+
+--HttpyacBoundary
+Content-Disposition: form-data; name="nombre"
+
+Valeria
+--HttpyacBoundary
+Content-Disposition: form-data; name="semestre"
+
+7
+--HttpyacBoundary
+Content-Disposition: form-data; name="archivo"; filename="Definiciones.md"
+Content-Type: text/markdown
+
+< ../Definiciones/Definiciones.md
+--HttpyacBoundary
+Content-Disposition: form-data; name="imagen"; filename="Snoopy.png"
+Content-Type: image/png
+
+< ../Express/uploads/Snoopy.png
+--HttpyacBoundary--
