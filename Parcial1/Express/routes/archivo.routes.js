@@ -23,30 +23,22 @@ const cargarArchivo = multer({
     limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-router.post("/", cargarArchivo.fields([
-    { name: "archivo", maxCount: 1 },
-    { name: "imagen", maxCount: 1 }
-]), (req, res) => {
-    const archivos = [
-        ...(req.files?.archivo || []),
-        ...(req.files?.imagen || [])
-    ];
-
-    if (archivos.length === 0) {
+router.post("/", cargarArchivo.single("imagen"), (req, res) => {
+    if (!req.file) {
         return res.status(400).json({
-            error: "Debes enviar un archivo en el campo 'archivo' o una imagen en 'imagen'"
+            error: "Debes enviar una imagen en el campo 'imagen'"
         });
     }
 
     res.status(201).json({
-        mensaje: "Archivo recibido correctamente",
-        archivos: archivos.map((archivo) => ({
-            nombre: archivo.filename,
-            nombreOriginal: archivo.originalname,
-            tipo: archivo.mimetype,
-            tamano: archivo.size,
-            ruta: `/uploads/${archivo.filename}`
-        })),
+        mensaje: "Imagen recibida correctamente",
+        imagen: {
+            nombre: req.file.filename,
+            nombreOriginal: req.file.originalname,
+            tipo: req.file.mimetype,
+            tamano: req.file.size,
+            ruta: `/uploads/${req.file.filename}`
+        },
         datos: req.body
     });
 });

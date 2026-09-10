@@ -14,6 +14,9 @@ const {
 
 const app = express();
 
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+
 const PORT = 3000;
 const carpetaLogs = path.join(__dirname, "logs");
 const archivoLogs = path.join(carpetaLogs, "access.log");
@@ -49,8 +52,12 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-    res.json({
-        mensaje: "Servidor Express funcionando correctamente, hecho por Valeria Segovia Espinoza"
+    res.render("inicio", {
+        titulo: "API REST de Valeria Segovia",
+        mensaje: "Servidor Express funcionando correctamente",
+        rutas: [
+            { metodo: "GET", url: "/api/usuario/Valeria?edad=21&carrera=API%20REST" }
+        ]
     });
 });
 
