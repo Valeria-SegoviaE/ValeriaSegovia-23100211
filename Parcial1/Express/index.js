@@ -61,7 +61,7 @@ app.get("/", (req, res) => {
     });
 });
 
-app.use("/api/usuario", horarioPermitido(7, 9), soloJson, usuarioRoutes);
+app.use("/api/usuario", horarioPermitido(7, 15), soloJson, usuarioRoutes);
 app.use("/api/archivo", archivoRoutes);
 
 app.use(rutaNoEncontrada);
