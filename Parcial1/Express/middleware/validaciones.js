@@ -1,19 +1,8 @@
-const { EventEmitter } = require("events");
-
-const eventosError = new EventEmitter();
-
 const crearError = (mensaje, status) => {
     const error = new Error(mensaje);
     error.status = status;
     return error;
 };
-
-eventosError.on("error", ({ error, req }) => {
-    console.error(
-        `${new Date().toISOString()} ${req.method} ${req.originalUrl}`,
-        error.stack || error.message
-    );
-});
 
 const rutaNoEncontrada = (req, res, next) => {
     next(crearError("Ruta no encontrada", 404));
@@ -39,21 +28,9 @@ const soloJson = (req, res, next) => {
     next();
 };
 
-const errorHandler = (err, req, res, next) => {
-    eventosError.emit("error", { error: err, req });
-
-    const status = err.status || err.statusCode || 500;
-    const mensaje = err.message || (status === 404 ? "Recurso no encontrado" : "Algo no ha ido bien");
-
-    res.status(status).json({
-        error: mensaje
-    });
-};
-
 module.exports = {
     crearError,
     rutaNoEncontrada,
     horarioPermitido,
-    soloJson,
-    errorHandler
+    soloJson
 };

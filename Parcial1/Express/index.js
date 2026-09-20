@@ -3,13 +3,13 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const morgan = require("morgan");
+const manejadorErrores = require("./middleware/errores");
 const usuarioRoutes = require("./routes/usuario.routes");
 const archivoRoutes = require("./routes/archivo.routes");
 const {
     rutaNoEncontrada,
     horarioPermitido,
     soloJson,
-    errorHandler
 } = require("./middleware/validaciones");
 
 const app = express();
@@ -66,7 +66,7 @@ app.use("/api/archivo", archivoRoutes);
 
 app.use(rutaNoEncontrada);
 
-app.use(errorHandler);
+app.use(manejadorErrores);
 
 app.listen(PORT, () => {
     console.log(`Servidor escuchando en http://localhost:${PORT}`);

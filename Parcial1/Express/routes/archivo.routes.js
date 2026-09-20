@@ -23,11 +23,12 @@ const cargarArchivo = multer({
     limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-router.post("/", cargarArchivo.single("imagen"), (req, res) => {
+router.post("/", cargarArchivo.single("imagen"), (req, res, next) => {
     if (!req.file) {
-        return res.status(400).json({
-            error: "Debes enviar una imagen en el campo 'imagen'"
-        });
+        const error = new Error("Falta el archivo de imagen");
+        error.status = 400;
+        error.publicMessage = "Debes enviar una imagen en el campo 'imagen'.";
+        return next(error);
     }
 
     res.status(201).json({
