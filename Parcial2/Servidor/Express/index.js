@@ -1,0 +1,78 @@
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
+const morgan = require("morgan");
+const autenticacionBasica = require("./middleware/autenticacion");
+const manejadorErrores = require("./middleware/errores");
+const usuarioRoutes = require("./routes/usuario.routes");
+const archivoRoutes = require("./routes/archivo.routes");
+const {
+    rutaNoEncontrada,
+    horarioPermitido,
+    soloJson,
+} = require("./middleware/validaciones");
+
+const app = express();
+
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+
+const PORT = Number(process.env.PORT) || 3000;
+const carpetaLogs = path.join(__dirname, "logs");
+const archivoLogs = path.join(carpetaLogs, "access.log");
+
+fs.mkdirSync(carpetaLogs, { recursive: true });
+const streamLogs = fs.createWriteStream(archivoLogs, { flags: "a" });
+
+morgan.token("fecha-local", () => {
+    const fecha = new Date();
+    const completar = (valor) => String(valor).padStart(2, "0");
+    const diferencia = -fecha.getTimezoneOffset();
+    const signo = diferencia >= 0 ? "+" : "-";
+    const minutos = Math.abs(diferencia);
+    const zona = `${signo}${completar(Math.floor(minutos / 60))}${completar(minutos % 60)}`;
+
+    return `${completar(fecha.getDate())}/${completar(fecha.getMonth() + 1)}/${fecha.getFullYear()}:${completar(fecha.getHours())}:${completar(fecha.getMinutes())}:${completar(fecha.getSeconds())} ${zona}`;
+});
+
+app.use(express.json());
+app.use(cors());
+
+app.use((req, res, next) => {
+    req.fechaSolicitud = new Date().toISOString();
+    res.setHeader("X-Fecha-Solicitud", req.fechaSolicitud);
+    next();
+});
+
+app.use(
+    morgan(':remote-addr - :remote-user [:fecha-local] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+        stream: streamLogs
+    })
+);
+
+app.use(autenticacionBasica);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+app.get("/", (req, res) => {
+    res.render("inicio", {
+        titulo: "API REST de Valeria Segovia",
+        mensaje: "Servidor Express funcionando correctamente",
+        rutas: [
+            { metodo: "GET", url: "/api/usuario/Valeria?edad=21&carrera=API%20REST" }
+        ]
+    });
+});
+
+app.use("/api/usuario", horarioPermitido(7, 15), soloJson, usuarioRoutes);
+app.use("/api/archivo", archivoRoutes);
+
+app.use(rutaNoEncontrada);
+
+app.use(manejadorErrores);
+
+app.listen(PORT, () => {
+    console.log(`Servidor escuchando en http://localhost:${PORT}`);
+}); 

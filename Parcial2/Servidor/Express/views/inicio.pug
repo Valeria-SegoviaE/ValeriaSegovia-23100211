@@ -1,0 +1,51 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= titulo
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem auto;
+        max-width: 720px;
+        padding: 0 1rem;
+        color: #202124;
+      }
+
+      h1 {
+        color: #1f4e79;
+      }
+
+      li {
+        margin: 0.5rem 0;
+      }
+
+      form {
+        display: grid;
+        gap: 0.75rem;
+        max-width: 480px;
+      }
+
+      img {
+        display: block;
+        max-width: 240px;
+        margin-top: 1rem;
+      }
+  body
+    h1= titulo
+    p= mensaje + "."
+    h2 Primer GET
+    ul
+      each ruta in rutas
+        li
+          strong= ruta.metodo
+          |  
+          a(href=ruta.url)= ruta.url
+    h2 Subir imagen
+    form(action="/api/archivo", method="post", enctype="multipart/form-data")
+      label(for="imagen") Selecciona una imagen:
+      input#imagen(type="file", name="imagen", accept="image/*", required)
+      button(type="submit") Subir imagen
+
+    
