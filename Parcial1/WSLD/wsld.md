@@ -1,6 +1,52 @@
 # Definición y estructura de un archivo WSDL para Web Services SOAP
 
-![Web Service SOAP](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80)
+## Introducción
+
+**WSDL (Web Services Description Language)** es un lenguaje basado en XML utilizado para describir la estructura y funcionamiento de un Web Service SOAP.
+
+Un archivo WSDL define qué operaciones ofrece un servicio, qué datos recibe, qué respuestas devuelve, cómo se deben enviar los mensajes y dónde se encuentra disponible el servicio.
+
+La estructura de un archivo WSDL está formada principalmente por los siguientes elementos:
+
+- `definitions`
+- `types`
+- `message`
+- `portType`
+- `binding`
+- `service`
+
+![WSLD](https://media.geeksforgeeks.org/wp-content/uploads/20200427212414/WSDL.png)
+---
+
+# Estructura general de un archivo WSDL
+
+Un documento WSDL tiene la siguiente estructura básica:
+
+```xml
+<definitions>
+
+    <types>
+        <!-- Definición de tipos de datos -->
+    </types>
+
+    <message>
+        <!-- Definición de mensajes -->
+    </message>
+
+    <portType>
+        <!-- Operaciones disponibles del servicio -->
+    </portType>
+
+    <binding>
+        <!-- Protocolo y formato de comunicación -->
+    </binding>
+
+    <service>
+        <!-- Dirección donde está publicado el servicio -->
+    </service>
+
+</definitions>
+```
 
 ## ¿Qué es un Web Service?
 
@@ -15,6 +61,9 @@ Por ejemplo:
 - Dos empresas pueden compartir información mediante servicios publicados en Internet.
 
 Los Web Services utilizan estándares abiertos como XML, HTTP y protocolos específicos como SOAP para garantizar la interoperabilidad entre sistemas.
+
+
+![Web Service SOAP](https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=1600&q=80)
 
 ---
 
