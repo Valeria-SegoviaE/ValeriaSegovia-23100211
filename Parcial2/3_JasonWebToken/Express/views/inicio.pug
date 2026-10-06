@@ -1,0 +1,179 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= titulo
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem auto;
+        max-width: 720px;
+        padding: 0 1rem;
+        color: #202124;
+      }
+
+      h1 {
+        color: #1f4e79;
+      }
+
+      li {
+        margin: 0.5rem 0;
+      }
+
+      form {
+        display: grid;
+        gap: 0.75rem;
+        max-width: 480px;
+      }
+
+      #formulario-login {
+        max-width: 360px;
+      }
+
+      #mensaje-login,
+      #mensaje-archivo {
+        min-height: 1.5em;
+        color: #a00;
+      }
+
+      img {
+        display: block;
+        max-width: 240px;
+        margin-top: 1rem;
+      }
+
+      pre {
+        overflow-x: auto;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+  body
+    main
+      section#panel-login
+        h1 Iniciar sesión
+        p Ingresa tus credenciales para ver el contenido.
+        form#formulario-login
+          label(for="usuario") Usuario
+          input#usuario(name="usuario", autocomplete="username", required)
+          label(for="clave") Contraseña
+          input#clave(type="password", name="clave", autocomplete="current-password", required)
+          button#enviar(type="submit") Iniciar sesión
+        p#mensaje-login(role="status", aria-live="polite")
+      section#contenido(hidden)
+        h1= titulo
+        p= mensaje + "."
+        button#cerrar-sesion(type="button") Cerrar sesión
+        h2 Primer GET
+        ul
+          each ruta in rutas
+            li
+              strong= ruta.metodo
+              |  
+              a.ruta-protegida(href=ruta.url)= ruta.url
+        pre#respuesta-api(hidden)
+        h2 Subir imagen
+        form#formulario-archivo(action="/api/archivo", method="post", enctype="multipart/form-data")
+          label(for="imagen") Selecciona una imagen:
+          input#imagen(type="file", name="imagen", accept="image/*", required)
+          button#subir-imagen(type="submit") Subir imagen
+        p#mensaje-archivo(role="status", aria-live="polite")
+        img#vista-previa(hidden, alt="Imagen subida")
+    script.
+      const claveToken = "jwtToken";
+      const panelLogin = document.querySelector("#panel-login");
+      const contenido = document.querySelector("#contenido");
+      const formularioLogin = document.querySelector("#formulario-login");
+      const mensajeLogin = document.querySelector("#mensaje-login");
+      const tokenActual = () => sessionStorage.getItem(claveToken);
+
+      const mostrarContenido = (autenticado) => {
+        panelLogin.hidden = autenticado;
+        contenido.hidden = !autenticado;
+      };
+
+      sessionStorage.removeItem(claveToken);
+      mostrarContenido(false);
+
+      formularioLogin.addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        const boton = document.querySelector("#enviar");
+        mensajeLogin.textContent = "";
+        boton.disabled = true;
+
+        try {
+          const respuesta = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              usuario: document.querySelector("#usuario").value,
+              clave: document.querySelector("#clave").value
+            })
+          });
+          const datos = await respuesta.json();
+
+          if (!respuesta.ok) {
+            throw new Error(datos.error?.message || "No se pudo iniciar sesión.");
+          }
+
+          sessionStorage.setItem(claveToken, datos.token);
+          formularioLogin.reset();
+          mostrarContenido(true);
+        } catch (error) {
+          mensajeLogin.textContent = error.message || "No se pudo conectar con el servidor.";
+        } finally {
+          boton.disabled = false;
+        }
+      });
+
+      document.querySelector("#cerrar-sesion").addEventListener("click", () => {
+        sessionStorage.removeItem(claveToken);
+        mostrarContenido(false);
+      });
+
+      document.querySelectorAll(".ruta-protegida").forEach((enlace) => {
+        enlace.addEventListener("click", async (evento) => {
+          evento.preventDefault();
+          const respuesta = await fetch(enlace.href, {
+            headers: { Authorization: `Bearer ${tokenActual()}` }
+          });
+          const datos = await respuesta.json();
+          const salida = document.querySelector("#respuesta-api");
+          salida.textContent = JSON.stringify(datos, null, 2);
+          salida.hidden = false;
+        });
+      });
+
+      document.querySelector("#formulario-archivo").addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        const mensaje = document.querySelector("#mensaje-archivo");
+        const boton = document.querySelector("#subir-imagen");
+        mensaje.textContent = "";
+        boton.disabled = true;
+
+        try {
+          const respuesta = await fetch(evento.currentTarget.action, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${tokenActual()}` },
+            body: new FormData(evento.currentTarget)
+          });
+          const datos = await respuesta.json();
+
+          if (!respuesta.ok) {
+            throw new Error(datos.error?.message || "No se pudo subir la imagen.");
+          }
+
+          const vista = document.querySelector("#vista-previa");
+          vista.src = datos.imagen.ruta;
+          vista.hidden = false;
+          mensaje.textContent = datos.mensaje;
+          evento.currentTarget.reset();
+        } catch (error) {
+          mensaje.textContent = error.message || "No se pudo conectar con el servidor.";
+        } finally {
+          boton.disabled = false;
+        }
+      });
+

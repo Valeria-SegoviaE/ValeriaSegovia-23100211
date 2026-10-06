@@ -1,0 +1,122 @@
+doctype html
+html(lang="es")
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title= titulo
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        margin: 2rem auto;
+        max-width: 720px;
+        padding: 0 1rem;
+        color: #202124;
+      }
+
+      h1 {
+        color: #1f4e79;
+      }
+
+      li {
+        margin: 0.5rem 0;
+      }
+
+      form {
+        display: grid;
+        gap: 0.75rem;
+        max-width: 480px;
+      }
+
+      img {
+        display: block;
+        max-width: 240px;
+        margin-top: 1rem;
+      }
+      .errores {
+        color: #a12622;
+      }
+  body
+    h1= titulo
+    p= mensaje + "."
+    h2 Primer GET
+    ul
+      each ruta in rutas
+        li
+          strong= ruta.metodo
+          |  
+          a(href=ruta.url)= ruta.url
+    h2 Consultar usuario
+    form#form-consulta(action="/consulta/usuario", method="get")
+      label(for="nombre") Nombre:
+      input#nombre(type="text", name="nombre", value=consulta.nombre, required)
+      label(for="edad") Edad (de 17 a 70):
+      input#edad(type="number", name="edad", min="17", max="70", step="1", value=consulta.edad, required)
+      label(for="carrera") Carrera (máximo 50 caracteres):
+      input#carrera(type="text", name="carrera", maxlength="50", value=consulta.carrera, required)
+      button(type="submit") Consultar
+    if errores.length
+      section.errores(role="alert")
+        h3 Revisa los datos
+        ul
+          each error in errores
+            li= error
+    section#resultado-consulta(aria-label="Resultado de la consulta", aria-live="polite", hidden=!resultado)
+      h3#resultado-mensaje= resultado ? resultado.mensaje : ""
+      div#resultado-detalles(hidden=!resultado)
+        p
+          strong Edad:
+          |  
+          span#resultado-edad= resultado ? resultado.edad : ""
+        p
+          strong Carrera:
+          |  
+          span#resultado-carrera= resultado ? resultado.carrera : ""
+      p#resultado-error.errores(role="alert", hidden=true)
+    h2 Subir imagen
+    form(action="/api/archivo", method="post", enctype="multipart/form-data")
+      label(for="imagen") Selecciona una imagen:
+      input#imagen(type="file", name="imagen", accept="image/jpeg,image/png,image/webp", required)
+      button(type="submit") Subir imagen
+    script.
+      const formConsulta = document.getElementById("form-consulta");
+      const panelResultado = document.getElementById("resultado-consulta");
+      const mensajeResultado = document.getElementById("resultado-mensaje");
+      const detallesResultado = document.getElementById("resultado-detalles");
+      const errorResultado = document.getElementById("resultado-error");
+
+      formConsulta.addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const edad = document.getElementById("edad").value;
+        const carrera = document.getElementById("carrera").value.trim();
+        const parametros = new URLSearchParams({ edad, carrera });
+        const url = `/api/usuario/${encodeURIComponent(nombre)}?${parametros}`;
+
+        panelResultado.hidden = false;
+        mensajeResultado.textContent = "Consultando usuario...";
+        detallesResultado.hidden = true;
+        errorResultado.hidden = true;
+
+        try {
+          const respuesta = await fetch(url, {
+            headers: { Accept: "application/hal+json" }
+          });
+          const datos = await respuesta.json();
+
+          if (!respuesta.ok) {
+            throw new Error(datos.error?.message || "No se pudo realizar la consulta.");
+          }
+
+          mensajeResultado.textContent = datos.mensaje;
+          document.getElementById("resultado-edad").textContent = datos.edad;
+          document.getElementById("resultado-carrera").textContent = datos.carrera;
+          detallesResultado.hidden = false;
+        } catch (error) {
+          mensajeResultado.textContent = "No se pudo completar la consulta";
+          errorResultado.textContent = error.message;
+          errorResultado.hidden = false;
+        }
+      });
+
+    
