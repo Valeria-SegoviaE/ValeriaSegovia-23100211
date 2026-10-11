@@ -259,3 +259,6 @@
 ::1 - - [11/10/2026:13:56:01 -0500] "GET / HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.141.0 Chrome/150.0.7871.250 Electron/43.7.7 Safari/537.36"
 ::1 - - [11/10/2026:13:56:01 -0500] "GET /favicon.ico HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.141.0 Chrome/150.0.7871.250 Electron/43.7.7 Safari/537.36"
 ::ffff:127.0.0.1 - - [11/10/2026:13:56:09 -0500] "GET / HTTP/1.1" 200 1042 "-" "Thunder Client (https://www.thunderclient.com)"
+::1 - - [11/10/2026:13:57:28 -0500] "GET / HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+::1 - - [11/10/2026:13:57:28 -0500] "GET /favicon.ico HTTP/1.1" 401 113 "https://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+::1 - - [11/10/2026:13:57:35 -0500] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
