@@ -269,3 +269,7 @@
 ::1 - - [11/10/2026:14:36:47 -0500] "POST /api/alumnos HTTP/1.1" 404 98 "-" "-"
 ::1 - - [11/10/2026:14:36:47 -0500] "POST /api/alumnos HTTP/1.1" 404 98 "-" "-"
 ::1 - - [11/10/2026:14:36:47 -0500] "GET /api/alumnos HTTP/1.1" 404 98 "-" "-"
+::1 - - [14/10/2026:08:37:46 -0500] "GET / HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.141.1 Chrome/150.0.7871.250 Electron/43.7.7 Safari/537.36"
+::1 - - [14/10/2026:08:37:46 -0500] "GET /favicon.ico HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Code/1.141.1 Chrome/150.0.7871.250 Electron/43.7.7 Safari/537.36"
+::1 - - [14/10/2026:08:37:55 -0500] "GET / HTTP/1.1" 401 113 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
+::1 - - [14/10/2026:08:37:55 -0500] "GET /favicon.ico HTTP/1.1" 401 113 "https://localhost:3000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36"
