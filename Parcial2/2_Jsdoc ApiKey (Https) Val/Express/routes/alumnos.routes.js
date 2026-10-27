@@ -32,6 +32,39 @@ const esquemaAlumno = Joi.object({
 
 router.use(autenticacionApiKey);
 
+/**
+ * @swagger
+ * /api/alumnos:
+ *   get:
+ *     tags: [Alumnos]
+ *     summary: Listar alumnos
+ *     description: |
+ *       Devuelve los alumnos registrados.
+ *
+ *       **cURL**
+ *       ```bash
+ *       curl -k https://localhost:3000/api/alumnos -H "x-api-key: TU_API_KEY"
+ *       ```
+ *
+ *       **JavaScript**
+ *       ```js
+ *       const response = await fetch("https://localhost:3000/api/alumnos", {
+ *         headers: { "x-api-key": API_KEY }
+ *       });
+ *       console.log(await response.json());
+ *       ```
+ *     responses:
+ *       200:
+ *         description: Lista de alumnos.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: "#/components/schemas/Alumno"
+ *       401:
+ *         description: API Key ausente o inválida.
+ */
 router.get("/", (req, res) => {
     res.json(alumnos);
 });
@@ -46,6 +79,74 @@ router.get("/:numeroControl", (req, res) => {
     res.json(alumno);
 });
 
+/**
+ * @swagger
+ * /api/alumnos:
+ *   post:
+ *     tags: [Alumnos]
+ *     summary: Registrar alumno
+ *     description: |
+ *       Registra un alumno después de validar sus datos.
+ *
+ *       **cURL**
+ *       ```bash
+ *       curl -k -X POST https://localhost:3000/api/alumnos -H "x-api-key: TU_API_KEY" -H "Content-Type: application/json" -d "{\"nombre\":\"Ana Pérez\",\"numeroControl\":\"23100211\",\"edad\":21,\"carrera\":\"API REST\"}"
+ *       ```
+ *
+ *       **JavaScript**
+ *       ```js
+ *       const response = await fetch("https://localhost:3000/api/alumnos", {
+ *         method: "POST",
+ *         headers: {
+ *           "x-api-key": API_KEY,
+ *           "Content-Type": "application/json"
+ *         },
+ *         body: JSON.stringify({
+ *           nombre: "Ana Pérez",
+ *           numeroControl: "23100211",
+ *           edad: 21,
+ *           carrera: "API REST"
+ *         })
+ *       });
+ *       console.log(await response.json());
+ *       ```
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/NuevoAlumno"
+ *     responses:
+ *       201:
+ *         description: Alumno registrado correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: Alumno registrado
+ *                 alumno:
+ *                   $ref: "#/components/schemas/Alumno"
+ *       400:
+ *         description: Los datos enviados no son válidos.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 mensaje:
+ *                   type: string
+ *                   example: Los datos del alumno no son válidos
+ *                 errores:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     example: El nombre es obligatorio
+ *       401:
+ *         description: API Key ausente o inválida.
+ */
 router.post("/", (req, res) => {
     const { error, value } = esquemaAlumno.validate(req.body, { abortEarly: false });
 

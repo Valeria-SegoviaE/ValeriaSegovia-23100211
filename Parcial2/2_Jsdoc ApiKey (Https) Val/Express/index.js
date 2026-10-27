@@ -6,6 +6,8 @@ const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
 const morgan = require("morgan");
+const swaggerUi = require("swagger-ui-express");
+const openApiSpec = require("./config/swagger");
 const autenticacionApiKey = require("./middleware/autenticacion");
 const manejadorErrores = require("./middleware/errores");
 const usuarioRoutes = require("./routes/usuario.routes");
@@ -61,6 +63,52 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", autenticacionApiKey, express.static(path.join(__dirname, "uploads")));
+app.get("/api-docs.json", (req, res) => res.json(openApiSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec, {
+    customSiteTitle: "API REST de Valeria Segovia",
+    customCss: `
+        .swagger-ui .info .description {
+            position: relative;
+        }
+
+        .swagger-ui .info .description::before {
+            content: "";
+            display: block;
+            width: 100%;
+            max-width: 960px;
+            height: 224px;
+            margin: 0 auto 20px;
+            background: url("/api-portada.svg") center / contain no-repeat;
+        }
+
+        .swagger-ui .info .description::after {
+            content: "";
+            position: absolute;
+            top: 19px;
+            right: max(calc((100% - 960px) / 2 + 29px), 4%);
+            width: min(31%, 296px);
+            height: 186px;
+            box-sizing: border-box;
+            border: 2px solid rgba(255, 255, 255, .4);
+            border-radius: 16px;
+            background: url("/campus-api.png") center / cover no-repeat;
+        }
+
+        @media (max-width: 600px) {
+            .swagger-ui .info .description::before {
+                height: 140px;
+            }
+
+            .swagger-ui .info .description::after {
+                top: 10px;
+                right: 5%;
+                width: 31%;
+                height: 116px;
+                border-radius: 10px;
+            }
+        }
+    `
+}));
 
 app.post("/api/validar-key", autenticacionApiKey, (req, res) => {
     res.json({ mensaje: "API Key válida" });
