@@ -1,0 +1,137 @@
+require("dotenv").config();
+
+const express = require("express");
+const https = require("https");
+const cors = require("cors");
+const fs = require("fs");
+const path = require("path");
+const morgan = require("morgan");
+const swaggerUi = require("swagger-ui-express");
+const openApiSpec = require("./config/swagger");
+const autenticacionApiKey = require("./middleware/autenticacion");
+const manejadorErrores = require("./middleware/errores");
+const usuarioRoutes = require("./routes/usuario.routes");
+const archivoRoutes = require("./routes/archivo.routes");
+const alumnosRoutes = require("./routes/alumnos.routes");
+const {
+    rutaNoEncontrada,
+    horarioPermitido,
+    soloJson,
+} = require("./middleware/validaciones");
+
+const app = express();
+
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+
+const PORT = Number(process.env.PORT) || 3000;
+const opciones = {
+    key: fs.readFileSync(path.join(__dirname, "certs", "key.pem")),
+    cert: fs.readFileSync(path.join(__dirname, "certs", "cert.pem")),
+};
+const carpetaLogs = path.join(__dirname, "logs");
+const archivoLogs = path.join(carpetaLogs, "access.log");
+
+fs.mkdirSync(carpetaLogs, { recursive: true });
+const streamLogs = fs.createWriteStream(archivoLogs, { flags: "a" });
+
+morgan.token("fecha-local", () => {
+    const fecha = new Date();
+    const completar = (valor) => String(valor).padStart(2, "0");
+    const diferencia = -fecha.getTimezoneOffset();
+    const signo = diferencia >= 0 ? "+" : "-";
+    const minutos = Math.abs(diferencia);
+    const zona = `${signo}${completar(Math.floor(minutos / 60))}${completar(minutos % 60)}`;
+
+    return `${completar(fecha.getDate())}/${completar(fecha.getMonth() + 1)}/${fecha.getFullYear()}:${completar(fecha.getHours())}:${completar(fecha.getMinutes())}:${completar(fecha.getSeconds())} ${zona}`;
+});
+
+app.use(express.json());
+app.use(cors());
+
+app.use((req, res, next) => {
+    req.fechaSolicitud = new Date().toISOString();
+    res.setHeader("X-Fecha-Solicitud", req.fechaSolicitud);
+    next();
+});
+
+app.use(
+    morgan(':remote-addr - :remote-user [:fecha-local] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"', {
+        stream: streamLogs
+    })
+);
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/uploads", autenticacionApiKey, express.static(path.join(__dirname, "uploads")));
+app.get("/api-docs.json", (req, res) => res.json(openApiSpec));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec, {
+    customSiteTitle: "API REST de Valeria Segovia",
+    customCss: `
+        .swagger-ui .info .description {
+            position: relative;
+        }
+
+        .swagger-ui .info .description::before {
+            content: "";
+            display: block;
+            width: 100%;
+            max-width: 960px;
+            height: 224px;
+            margin: 0 auto 20px;
+            background: url("/api-portada.svg") center / contain no-repeat;
+        }
+
+        .swagger-ui .info .description::after {
+            content: "";
+            position: absolute;
+            top: 19px;
+            right: max(calc((100% - 960px) / 2 + 29px), 4%);
+            width: min(31%, 296px);
+            height: 186px;
+            box-sizing: border-box;
+            border: 2px solid rgba(255, 255, 255, .4);
+            border-radius: 16px;
+            background: url("/campus-api.png") center / cover no-repeat;
+        }
+
+        @media (max-width: 600px) {
+            .swagger-ui .info .description::before {
+                height: 140px;
+            }
+
+            .swagger-ui .info .description::after {
+                top: 10px;
+                right: 5%;
+                width: 31%;
+                height: 116px;
+                border-radius: 10px;
+            }
+        }
+    `
+}));
+
+app.post("/api/validar-key", autenticacionApiKey, (req, res) => {
+    res.json({ mensaje: "API Key válida" });
+});
+
+app.get("/inicio", (req, res) => {
+    res.render("inicio", {
+        titulo: "API REST de Valeria Segovia",
+        mensaje: "Servidor Express funcionando correctamente",
+        rutas: [
+            { metodo: "GET", url: "/api/usuario/Valeria?edad=21&carrera=API%20REST" }
+        ]
+    });
+});
+
+app.use("/api/alumnos", alumnosRoutes);
+app.use("/api/usuario", autenticacionApiKey, horarioPermitido(7, 15), soloJson, usuarioRoutes);
+app.use("/api/archivo", autenticacionApiKey, archivoRoutes);
+
+app.use(rutaNoEncontrada);
+
+app.use(manejadorErrores);
+
+https.createServer(opciones, app).listen(PORT, () => {
+    console.log(`Servidor escuchando en https://localhost:${PORT}`);
+}); 
