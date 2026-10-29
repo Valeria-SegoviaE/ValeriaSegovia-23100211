@@ -1,7 +1,5 @@
 # API REST con Express y API Key
 
-![Portada de la API REST de Valeria Segovia](/api-portada.svg)
-
 - **Responsable:** Valeria Segovia
 - **Versión:** 1.0.0
 - **Tecnologías:** Node.js, Express y OpenAPI 3
@@ -15,9 +13,12 @@ requieren que la variable de entorno `API_KEY` esté configurada en el servidor.
 ## Swagger / OpenAPI
 
 Inicia el servidor y abre `https://localhost:3000/api-docs` para explorar y probar
-los endpoints en Swagger UI. La especificación OpenAPI se genera desde los
-bloques `@swagger` de las rutas y está disponible en
-`https://localhost:3000/api-docs.json`.
+los endpoints en Swagger UI, `https://localhost:3000/json` para consultar la
+especificación en formato JSON o `https://localhost:3000/docs` para Stoplight Elements.
+Las vistas de documentación cargan la misma especificación OpenAPI, disponible en
+`https://localhost:3000/api-docs.json`, que se genera desde los bloques `@swagger`
+de las rutas. Stoplight Elements carga sus recursos visuales desde un CDN; requiere
+conexión a Internet para mostrarse.
 
 En Swagger UI, selecciona **Authorize** e introduce el valor de `API_KEY` para
 probar los endpoints protegidos. Si configuraste otro puerto mediante `PORT`,

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#102a43">
+    <title>Documentación | API REST de Valeria Segovia</title>
+    <link rel="stylesheet" href="/docs-navigation.css">
+    <link rel="stylesheet" href="https://unpkg.com/@stoplight/elements@9.0.29/styles.min.css">
+    <script defer src="https://unpkg.com/@stoplight/elements@9.0.29/web-components.min.js"></script>
+    <script defer src="/docs-overview.js"></script>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f7fb;
+            color: #263b50;
+            --color-primary: #176b87;
+            --color-primary-dark: #102a43;
+            --color-primary-light: #e8f4f5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        elements-api {
+            display: block;
+            min-height: calc(100vh - 64px);
+            --color-primary: #176b87;
+            --color-primary-dark: #102a43;
+            --color-primary-light: #e8f4f5;
+        }
+    </style>
+</head>
+<body>
+    <elements-api
+        apiDescriptionUrl="/api-docs.json"
+        router="hash"
+        layout="sidebar">
+    </elements-api>
+</body>
+</html>

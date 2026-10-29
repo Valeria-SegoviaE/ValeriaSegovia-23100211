@@ -10,6 +10,8 @@ const swaggerOptions = {
             title: "API REST de Valeria Segovia",
             version: "1.0.0",
             description: [
+                "![Portada de la API REST de Valeria Segovia](/api-portada.svg)",
+                "",
                 "API REST académica para consultar y registrar alumnos, consultar usuarios en formato HAL y cargar o recuperar imágenes.",
                 "",
                 "- **Responsable:** Valeria Segovia",

@@ -64,48 +64,68 @@ app.use(
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/uploads", autenticacionApiKey, express.static(path.join(__dirname, "uploads")));
 app.get("/api-docs.json", (req, res) => res.json(openApiSpec));
+app.get("/docs", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "docs.html"));
+});
+app.get("/json", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "json.html"));
+});
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiSpec, {
     customSiteTitle: "API REST de Valeria Segovia",
+    customJs: "/docs-navigation.js",
+    customCssUrl: "/docs-navigation.css",
     customCss: `
+        body {
+            background: #f5f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .swagger-ui .topbar {
+            background: #102a43;
+        }
+
+        .swagger-ui .wrapper {
+            max-width: 1120px;
+        }
+
+        .swagger-ui .info {
+            margin: 28px 0;
+        }
+
+        .swagger-ui .info .title,
+        .swagger-ui .opblock-tag {
+            color: #102a43;
+        }
+
         .swagger-ui .info .description {
-            position: relative;
+            color: #34495e;
+            font-size: 15px;
+            line-height: 1.65;
         }
 
-        .swagger-ui .info .description::before {
-            content: "";
-            display: block;
-            width: 100%;
-            max-width: 960px;
-            height: 224px;
-            margin: 0 auto 20px;
-            background: url("/api-portada.svg") center / contain no-repeat;
+        .swagger-ui .info .description img[src$="/api-portada.svg"] {
+            display: none;
         }
 
-        .swagger-ui .info .description::after {
-            content: "";
-            position: absolute;
-            top: 19px;
-            right: max(calc((100% - 960px) / 2 + 29px), 4%);
-            width: min(31%, 296px);
-            height: 186px;
-            box-sizing: border-box;
-            border: 2px solid rgba(255, 255, 255, .4);
-            border-radius: 16px;
-            background: url("/campus-api.png") center / cover no-repeat;
+        .swagger-ui .opblock {
+            margin: 0 0 12px;
+            border-radius: 6px;
+            box-shadow: none;
         }
 
-        @media (max-width: 600px) {
-            .swagger-ui .info .description::before {
-                height: 140px;
-            }
+        .swagger-ui .btn {
+            border-radius: 5px;
+            box-shadow: none;
+        }
 
-            .swagger-ui .info .description::after {
-                top: 10px;
-                right: 5%;
-                width: 31%;
-                height: 116px;
-                border-radius: 10px;
-            }
+        .swagger-ui .btn.authorize {
+            border-color: #b7c8e8;
+            background: #eef2ff;
+            color: #344a83;
+        }
+
+        .swagger-ui select {
+            border-radius: 5px;
         }
     `
 }));
