@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de alumnos</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main>
+        <section id="login-screen" class="login-screen">
+            <h1>Registro de alumnos</h1>
+            <form id="key-form">
+                <label for="api-key">API Key</label>
+                <input id="api-key" type="password" placeholder="Escribe tu API Key" required>
+                <button type="submit">Iniciar sesión</button>
+            </form>
+            <p id="key-message" class="message" role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="students-screen" class="students-screen" hidden>
+            <h1>Alumnos</h1>
+            <div class="columns">
+                <form id="student-form" class="panel">
+                    <h2>Registrar alumno</h2>
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" name="nombre" type="text" minlength="2" required>
+
+                    <label for="numero-control">Número de control</label>
+                    <input id="numero-control" name="numeroControl" type="text" minlength="6" maxlength="10" required>
+
+                    <div class="field-row">
+                        <div>
+                            <label for="edad">Edad</label>
+                            <input id="edad" name="edad" type="number" min="17" max="60" step="1" required>
+                        </div>
+                        <div>
+                            <label for="carrera">Carrera</label>
+                            <input id="carrera" name="carrera" type="text" required>
+                        </div>
+                    </div>
+                    <button type="submit">Guardar</button>
+                    <p id="form-message" class="message" role="status" aria-live="polite"></p>
+                </form>
+
+                <section class="panel" aria-label="Rutas GET de alumnos">
+                    <h2>Rutas GET</h2>
+                    <ul id="student-routes"></ul>
+                    <p id="route-message" class="message" role="status" aria-live="polite"></p>
+                    <pre id="student-result" hidden></pre>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

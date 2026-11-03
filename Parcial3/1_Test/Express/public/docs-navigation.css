@@ -1,0 +1,128 @@
+.docs-nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+
+.docs-nav a {
+    display: inline-flex;
+    min-height: 38px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+    border: 1px solid #cbd9e8;
+    border-radius: 7px;
+    color: #244b71;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.docs-nav a:hover,
+.docs-nav a:focus-visible {
+    border-color: #176b87;
+    background: #f2f8fa;
+}
+
+.docs-nav a[aria-current="page"] {
+    border-color: #9acbd0;
+    background: #e8f4f5;
+    color: #14566d;
+}
+
+.docs-nav--swagger {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    margin-left: auto;
+    padding: 0 0 0 24px;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.swagger-ui .topbar .topbar-wrapper > .docs-nav--swagger {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.docs-nav--swagger a {
+    flex: 0 0 auto;
+}
+
+.docs-nav--swagger a {
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.docs-nav--swagger a:hover,
+.docs-nav--swagger a:focus-visible {
+    border-color: #8de7df;
+    background: rgba(141, 231, 223, 0.16);
+    color: #fff;
+}
+
+.docs-nav--swagger a[aria-current="page"] {
+    border-color: #8de7df;
+    color: #102a43;
+    background: #8de7df;
+}
+
+.swagger-ui .topbar .topbar-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.docs-cover {
+    position: relative;
+    width: min(1100px, 100%);
+    aspect-ratio: 30 / 7;
+    margin: 18px 0 22px;
+    overflow: hidden;
+    border-radius: 14px;
+}
+
+.docs-cover > img:first-child {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+
+.docs-cover .docs-cover-photo {
+    position: absolute;
+    top: 8.57%;
+    left: 65.83%;
+    width: 30.83%;
+    height: 82.86%;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 14px;
+    object-fit: cover;
+    object-position: center;
+}
+
+@media (max-width: 640px) {
+    .docs-cover {
+        width: 100%;
+    }
+
+    .docs-nav--swagger {
+        margin-left: auto;
+        padding-left: 8px;
+        gap: 5px;
+    }
+
+    .docs-nav--swagger a {
+        min-height: 32px;
+        padding: 0 8px;
+        font-size: 12px;
+    }
+}

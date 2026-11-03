@@ -9,6 +9,8 @@
 API REST académica para consultar y registrar alumnos, consultar recursos de
 usuarios. Las rutas protegidas
 requieren que la variable de entorno `API_KEY` esté configurada en el servidor.
+La aplicación Express está en `src/app.js`; `index.js` conserva el arranque HTTPS
+del servidor.
 
 ## Swagger / OpenAPI
 
@@ -34,3 +36,11 @@ npm run doc
 ```
 
 La documentación HTML se genera en la carpeta `out/`.
+
+## Ejecutar las pruebas
+
+Las pruebas de integración de la API usan Mocha, Chai y Supertest. Ejecútalas con:
+
+```sh
+npm run test
+```
