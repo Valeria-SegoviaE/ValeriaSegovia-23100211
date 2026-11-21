@@ -1,0 +1,34 @@
+@Cache_HostAddress = http://localhost:3000
+
+### Comprobar que el servidor está activo
+GET {{Cache_HostAddress}}/
+
+### Guardar un valor JSON durante 60 segundos
+POST {{Cache_HostAddress}}/api/cache
+Content-Type: application/json
+
+{
+  "clave": "producto-1",
+  "valor": {
+    "nombre": "Teclado",
+    "precio": 599.5,
+    "disponible": true
+  }
+}
+
+### Consultar la clave
+GET {{Cache_HostAddress}}/api/cache/producto-1
+
+### Consultar una clave inexistente
+GET {{Cache_HostAddress}}/api/cache/no-existe
+
+### Eliminar la clave
+DELETE {{Cache_HostAddress}}/api/cache/producto-1
+
+### Validación: falta el valor
+POST {{Cache_HostAddress}}/api/cache
+Content-Type: application/json
+
+{
+  "clave": "sin-valor"
+}
