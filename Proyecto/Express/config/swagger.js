@@ -3,6 +3,7 @@ const swaggerJsdoc = require("swagger-jsdoc");
 
 const PORT = Number(process.env.PORT) || 3000;
 const urlServidor = process.env.API_URL
+    || (process.env.VERCEL && "/")
     || (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`)
     || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
     || `https://localhost:${PORT}`;
