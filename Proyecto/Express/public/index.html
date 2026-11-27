@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de alumnos</title>
+    <link rel="stylesheet" href="docs-navigation.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main>
+        <section id="login-screen" class="login-screen">
+            <h1>Registro de alumnos</h1>
+            <p class="login-description">Ingresa tu API Key para administrar los registros.</p>
+            <form id="key-form">
+                <label for="api-key">API Key</label>
+                <input id="api-key" type="password" placeholder="Escribe tu API Key" required>
+                <button type="submit">Iniciar sesión</button>
+            </form>
+            <p id="key-message" class="message" role="status" aria-live="polite"></p>
+        </section>
+
+        <section id="students-screen" class="students-screen" hidden>
+            <header class="documentation-toolbar">
+                <strong>Documentación de la API</strong>
+                <nav class="docs-nav docs-nav--alumnos" aria-label="Vistas de documentación">
+                    <a href="/api-docs">Swagger</a>
+                    <a href="/json">JSON</a>
+                    <a href="/docs">Stoplight</a>
+                    <a href="/scalar">Scalar</a>
+                </nav>
+            </header>
+            <header class="page-header">
+                <p class="eyebrow">GESTIÓN ACADÉMICA</p>
+                <h1>Alumnos</h1>
+                <p class="page-description">Registra, consulta y administra la información de tus alumnos.</p>
+            </header>
+            <div class="columns">
+                <form id="student-form" class="panel">
+                    <h2 id="form-title">Registrar alumno</h2>
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" name="nombre" type="text" minlength="2" required>
+
+                    <label for="numero-control">Número de control</label>
+                    <input id="numero-control" name="numeroControl" type="text" minlength="6" maxlength="10" required>
+
+                    <div class="field-row">
+                        <div>
+                            <label for="edad">Edad</label>
+                            <input id="edad" name="edad" type="number" min="17" max="60" step="1" required>
+                        </div>
+                        <div>
+                            <label for="carrera">Carrera</label>
+                            <select id="carrera" name="carrera" required>
+                                <option value="" selected disabled>Selecciona una carrera</option>
+                                <option>Arquitectura</option>
+                                <option>Contador Público</option>
+                                <option>Ingeniería Administración</option>
+                                <option>Ingeniería Civil</option>
+                                <option>Ingeniería Eléctrica</option>
+                                <option>Ingeniería Electrónica</option>
+                                <option>Ingeniería Gestión Empresarial</option>
+                                <option>Ingeniería Industrial</option>
+                                <option>Ingeniería Logística</option>
+                                <option>Ingeniería Mecatrónica</option>
+                                <option>Ingeniería Mecánica</option>
+                                <option>Ingeniería Sistemas Computacionales</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Guardar</button>
+                        <button id="cancel-edit" type="button" hidden>Cancelar</button>
+                    </div>
+                    <div id="form-message" class="message" role="status" aria-live="polite"></div>
+                </form>
+
+                <section class="panel" aria-label="Rutas GET de alumnos">
+                    <h2>Rutas GET</h2>
+                    <form id="lookup-form" class="lookup-form">
+                        <label for="lookup-id">Consultar alumno por ID</label>
+                        <div class="lookup-controls">
+                            <input id="lookup-id" type="number" min="1" step="1" placeholder="Ej. 12" required>
+                            <button type="submit">Consultar</button>
+                        </div>
+                    </form>
+                    <ul id="student-routes"></ul>
+                    <div id="route-message" class="message" role="status" aria-live="polite"></div>
+                    <pre id="student-result" hidden></pre>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
