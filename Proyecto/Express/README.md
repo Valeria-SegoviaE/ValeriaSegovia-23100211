@@ -26,6 +26,8 @@ En Swagger UI, selecciona **Authorize** e introduce el valor de `API_KEY` para
 probar los endpoints protegidos. Si configuraste otro puerto mediante `PORT`,
 reemplaza `3000` en las direcciones anteriores. Las rutas de usuarios solo están
 disponibles entre las 07:00 y las 14:59, según la hora local del servidor.
+En Vercel, Swagger usa la URL del deployment actual; puedes definir `API_URL`
+para establecer una URL base personalizada.
 
 ## Generar la documentación
 

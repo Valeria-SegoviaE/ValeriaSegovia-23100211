@@ -2,6 +2,10 @@ const path = require("path");
 const swaggerJsdoc = require("swagger-jsdoc");
 
 const PORT = Number(process.env.PORT) || 3000;
+const urlServidor = process.env.API_URL
+    || (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`)
+    || (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
+    || `https://localhost:${PORT}`;
 
 const swaggerOptions = {
     definition: {
@@ -24,12 +28,12 @@ const swaggerOptions = {
             license: { name: "Proyecto académico" }
         },
         servers: [
-            process.env.API_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL
-                ? {
-                    url: process.env.API_URL || `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`,
-                    description: "Servidor desplegado"
-                }
-                : { url: `https://localhost:${PORT}`, description: "Servidor HTTPS local" }
+            {
+                url: urlServidor,
+                description: process.env.VERCEL || process.env.API_URL
+                    ? "Servidor desplegado"
+                    : "Servidor HTTPS local"
+            }
         ],
         security: [{ ApiKeyAuth: [] }],
         tags: [
