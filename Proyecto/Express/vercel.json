@@ -1,7 +1,10 @@
 {
   "functions": {
     "api/index.js": {
-      "includeFiles": "{public,views,docs,db}/**"
+      "includeFiles": [
+        "{public,views,docs,db}/**",
+        "node_modules/swagger-ui-dist/**"
+      ]
     }
   },
   "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
